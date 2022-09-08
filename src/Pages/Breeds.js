@@ -58,7 +58,7 @@ const Breeds = () => {
               }}>
                 <img
                   src={breed.image && breed.image.url}
-                  alt={`image of an ${breed.name}`}
+                  alt={`${breed.name}`}
                   style={{
                     width: "100%",
                     height: "100%",
