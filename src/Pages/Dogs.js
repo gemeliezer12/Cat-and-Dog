@@ -139,6 +139,7 @@ const Dogs = () => {
             setDogImagesByBreedTrigger((prevState) => !prevState);
           }}
         >
+          
           <p>Load more</p>
         </div>
       </div>
