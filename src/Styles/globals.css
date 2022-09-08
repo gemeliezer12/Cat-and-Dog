@@ -1,0 +1,128 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+:root {
+  --base-color-indigo: #4f46e5;
+  --base-color-blue: #3b82f6;
+  --base-color-sky: #0ea5e9;
+  --base-color-cyan: #22d3ee;
+  --base-color-teal: #2dd4bf;
+  --base-color-emerald: #34d399;
+  --base-color-green: #4ade80;
+  --base-color-lime: #a3e635;
+  --base-color-yellow: #eab308;
+  --base-color-amber: #f59e0b;
+  --base-color-orange: #ea580c;
+  --base-color-red: #dc2626;
+  --base-color-rose: #e11d48;
+  --base-color-pink: #db2777;
+  --base-color-fuchsia: #c026d3;
+  --base-color-purple: #9333ea;
+  --base-color-violet: #7c3aed;
+
+  --bg-color-dark-1: rgb(15, 20, 25);
+  --bg-color-dark-2: rgb(20, 25, 30);
+  --bg-color-dark-3: rgba(25, 35, 45);
+  --bg-color-dark-4: rgba(35, 45, 55);
+  --bg-color-dark-5: rgba(55, 65, 85);
+
+  --bg-color-light-5: rgb(215, 230, 235);
+  --bg-color-light-4: rgb(220, 235, 240);
+  --bg-color-light-3: rgb(230, 245, 250);
+  --bg-color-light-2: rgb(255, 255, 255);
+  --bg-color-light-1: rgb(255, 255, 255);
+
+  --text-color-dark-1: white;
+  --text-color-dark-2: rgba(195, 195, 195);
+  --text-color-dark-3: rgba(155, 155, 155);
+
+  --text-color-light-1: black;
+  --text-color-light-2: rgba(60, 60, 60);
+  --text-color-light-3: rgba(100, 100, 100);
+}
+
+.light,
+.dark .opposite {
+  --text-color-1: var(--text-color-light-1);
+  --text-color-2: var(--text-color-light-2);
+  --text-color-3: var(--text-color-light-3);
+  --text-color-comp-1: var(--text-color-dark-1);
+  --text-color-comp-2: var(--text-color-dark-2);
+  --text-color-comp-3: var(--text-color-dark-3);
+
+  --bg-color-1: var(--bg-color-light-1);
+  --bg-color-2: var(--bg-color-light-2);
+  --bg-color-3: var(--bg-color-light-3);
+  --bg-color-4: var(--bg-color-light-4);
+  --bg-color-5: var(--bg-color-light-5);
+  --bg-color-comp-1: var(--bg-color-dark-1);
+  --bg-color-comp-2: var(--bg-color-dark-2);
+  --bg-color-comp-3: var(--bg-color-dark-3);
+  --bg-color-comp-4: var(--bg-color-dark-4);
+  --bg-color-comp-5: var(--bg-color-dark-5);
+}
+
+.dark,
+.light .opposite {
+  --text-color-1: var(--text-color-dark-1);
+  --text-color-2: var(--text-color-dark-2);
+  --text-color-3: var(--text-color-dark-3);
+  --text-color-comp-1: var(--text-color-light-1);
+  --text-color-comp-2: var(--text-color-light-2);
+  --text-color-comp-3: var(--text-color-light-3);
+
+  --bg-color-1: var(--bg-color-dark-1);
+  --bg-color-2: var(--bg-color-dark-2);
+  --bg-color-3: var(--bg-color-dark-3);
+  --bg-color-4: var(--bg-color-dark-4);
+  --bg-color-5: var(--bg-color-dark-5);
+  --bg-color-comp-1: var(--bg-color-light-1);
+  --bg-color-comp-2: var(--bg-color-light-2);
+  --bg-color-comp-3: var(--bg-color-light-3);
+  --bg-color-comp-4: var(--bg-color-light-4);
+  --bg-color-comp-5: var(--bg-color-light-5);
+}
+
+html {
+  font-size: 16px;
+  font-weight: 500;
+  font-family: Poppins;
+}
+* {
+  color: var(--text-color-1);
+  outline: none;
+  background-color: transparent;
+  font-family: inherit;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+textarea {
+  resize: none;
+}
+body {
+  background-color: var(--bg-color-2);
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+}
+
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-color-2);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bg-color-comp-2);
+  border-radius: 20px;
+}
+::-webkit-scrollbar-corner {
+  background-color: var(--bg-color-2);
+}
+::selection {
+  background-color: var(--base-color-green);
+  color: white;
+}
