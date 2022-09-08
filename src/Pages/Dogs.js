@@ -6,26 +6,33 @@ import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import axios from "axios";
 
 const Dogs = () => {
-  const { dogImages, getDogImagesByBreed } = useCatDogContext();
+  const {
+    dogImagesByBreed,
+    setDogImagesByBreedPageNumber,
+    setDogImagesByBreedTrigger,
+    setSelectedDogBreed,
+  } = useCatDogContext();
   const { breeds_id } = useParams();
   const [breedOptions, setBreedOptions] = useState();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const breedOptionsHandler = async () => {
     try {
       setBreedOptions(
-        (await axios.get(`https://api.TheDogAPI.com/v1/breeds`)).data
+        (await axios.get(`https://api.thedogapi.com/v1/breeds`)).data
       );
     } catch (error) {}
   };
 
   useEffect(() => {
-    if (!breeds_id) return ""
     breedOptionsHandler();
-    getDogImagesByBreed(breeds_id);
+  }, []);
+
+  useEffect(() => {
+    setSelectedDogBreed(breeds_id);
   }, [breeds_id]);
 
-  if (!dogImages) return "";
+  if (!dogImagesByBreed) return "";
   if (!breedOptions) return "";
 
   return (
@@ -42,7 +49,11 @@ const Dogs = () => {
           justifyContent: "space-between",
         }}
       >
-        <div>
+        <div
+          style={{
+            display: "flex",
+          }}
+        >
           <p
             style={{
               color: "var(--base-color-pink)",
@@ -55,17 +66,24 @@ const Dogs = () => {
         <div
           style={{
             display: "flex",
+            alignItems: "start",
+            gap: "10px",
           }}
         >
           <FormControl fullWidth sx={{ minWidth: "240px" }}>
             <InputLabel id="demo-simple-select-label">Breed</InputLabel>
             <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={"age"}
+              value={
+                breeds_id &&
+                breedOptions.filter(
+                  (breedOption) => breedOption.id == breeds_id
+                )[0].id
+              }
               label="Breed"
               onChange={(e) => {
-                navigate(`../dogs/${e.target.value}`, { replace: true });
+                const { value } = e.target;
+
+                navigate(`../dogs/${value}`, { replace: true });
               }}
             >
               {breedOptions.map((breedOption) => (
@@ -83,7 +101,7 @@ const Dogs = () => {
         }}
       >
         <Masonry columns={{ xs: 2, sm: 3, md: 4, lg: 5, xl: 6 }} spacing={1}>
-          {dogImages.map((dog, index) => (
+          {dogImagesByBreed.map((dog, index) => (
             <div key={index}>
               <img
                 src={`${dog.url}`}
@@ -99,6 +117,30 @@ const Dogs = () => {
             </div>
           ))}
         </Masonry>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "10px",
+        }}
+      >
+        <div
+          className="dark"
+          style={{
+            padding: "10px 25px",
+            backgroundColor: "var(--base-color-pink)",
+            borderRadius: "4px",
+            fontWeight: "900",
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            setDogImagesByBreedPageNumber((prevState) => prevState + 1);
+            setDogImagesByBreedTrigger((prevState) => !prevState);
+          }}
+        >
+          <p>Load more</p>
+        </div>
       </div>
     </div>
   );

@@ -8,23 +8,26 @@ export const useCatDogContext = () => useContext(CatDogContext);
 
 export const CatDogProvider = ({ children }) => {
   const [catDogBreeds, setCatDogBreeds] = useState();
-  const [catDogBreedsPerPage, setCatDogBreedsPerPage] = useState(12);
   const [catDogBreedsPageNumber, setCatDogBreedsPageNumber] = useState(0);
   const [catDogBreedsTrigger, setCatDogBreedsTrigger] = useState(false);
-  const [catImages, setCatImages] = useState([]);
-  const [dogImages, setDogImages] = useState([]);
+  const [catImagesByBreed, setCatImagesByBreed] = useState([]);
+  const [dogImagesByBreed, setDogImagesByBreed] = useState([]);
+  const [catImagesByBreedPageNumber, setCatImagesByBreedPageNumber] =
+    useState(0);
+  const [dogImagesByBreedPageNumber, setDogImagesByBreedPageNumber] =
+    useState(0);
+  const [catImagesByBreedTrigger, setCatImagesByBreedTrigger] = useState(false);
+  const [dogImagesByBreedTrigger, setDogImagesByBreedTrigger] = useState(false);
+  const [selectedCatBreed, setSelectedCatBreed] = useState();
+  const [selectedDogBreed, setSelectedDogBreed] = useState();
 
   const getCatDogBreeds = async () => {
     const res = await Promise.all([
       axios.get(
-        `https://api.thecatapi.com/v1/breeds?page=${catDogBreedsPageNumber}&limit=${
-          catDogBreedsPerPage / 2
-        }`
+        `https://api.thecatapi.com/v1/breeds?page=${catDogBreedsPageNumber}&limit=6`
       ),
       axios.get(
-        `https://api.thedogapi.com/v1/breeds?page=${catDogBreedsPageNumber}&limit=${
-          catDogBreedsPerPage / 2
-        }`
+        `https://api.thedogapi.com/v1/breeds?page=${catDogBreedsPageNumber}&limit=6`
       ),
     ]);
 
@@ -45,25 +48,47 @@ export const CatDogProvider = ({ children }) => {
     setCatDogBreeds(combinedRes.rows);
   };
 
-  const getCatImagesByBreed = async (breeds_id) => {
+  const getCatImagesByBreed = async () => {
     try {
-      if (!breeds_id) return ""
-      const res = await axios.get(
-        `https://api.thecatapi.com/v1/images/search?breed_ids=${breeds_id}&limit=10&page=0`
-      );
+      let res;
+      if (!selectedCatBreed) {
+        res = await axios.get(
+          `https://api.thecatapi.com/v1/images/search?limit=10&page=0&order=ASC`
+        );
+      } else {
+        res = await axios.get(
+          `https://api.thecatapi.com/v1/images/search?breed_ids=${selectedCatBreed}&limit=10&page=${catImagesByBreedPageNumber}&order=ASC`,
+          {
+            headers: {
+              "x-api-key": process.env.REACT_APP_THE_CAT_API_API_KEY,
+            },
+          }
+        );
+      }
 
-      setCatImages(res.data);
+      setCatImagesByBreed([...catImagesByBreed, ...res.data]);
     } catch (error) {}
   };
 
-  const getDogImagesByBreed = async (breeds_id) => {
+  const getDogImagesByBreed = async () => {
     try {
-      if (!breeds_id) return ""
-      const res = await axios.get(
-        `https://api.thedogapi.com/v1/images/search?breed_ids=${breeds_id}&limit=10&page=0`
-      );
+      let res;
+      if (!selectedDogBreed) {
+        res = await axios.get(
+          `https://api.thedogapi.com/v1/images/search?limit=10&page=0&order=ASC`
+        );
+      } else {
+        res = await axios.get(
+          `https://api.thedogapi.com/v1/images/search?breed_ids=${selectedDogBreed}&limit=10&page=${dogImagesByBreedPageNumber}&order=ASC`,
+          {
+            headers: {
+              "x-api-key": process.env.REACT_APP_THE_DOG_API_API_KEY,
+            },
+          }
+        );
+      }
 
-      setDogImages(res.data);
+      setDogImagesByBreed([...dogImagesByBreed, ...res.data]);
     } catch (error) {}
   };
 
@@ -74,18 +99,44 @@ export const CatDogProvider = ({ children }) => {
 
   useEffect(() => {
     getCatDogBreeds();
-    getCatImagesByBreed();
-    getDogImagesByBreed();
   }, [catDogBreedsTrigger]);
+
+  useEffect(() => {
+    getCatImagesByBreed();
+  }, [catImagesByBreedTrigger]);
+
+  useEffect(() => {
+    getDogImagesByBreed();
+  }, [dogImagesByBreedTrigger]);
+
+  useEffect(() => {
+    setCatImagesByBreed([]);
+    setCatImagesByBreedPageNumber(0);
+    setCatImagesByBreedTrigger((prevState) => !prevState);
+  }, [selectedCatBreed]);
+
+  useEffect(() => {
+    setDogImagesByBreed([]);
+    setDogImagesByBreedPageNumber(0);
+    setDogImagesByBreedTrigger((prevState) => !prevState);
+  }, [selectedDogBreed]);
 
   const value = {
     catDogBreeds,
     catDogBreedsPageNumber,
     changeCatDogBreeds,
-    dogImages,
-    catImages,
+    dogImagesByBreed,
+    catImagesByBreed,
     getCatImagesByBreed,
     getDogImagesByBreed,
+    selectedCatBreed,
+    selectedDogBreed,
+    setSelectedCatBreed,
+    setSelectedDogBreed,
+    setCatImagesByBreedTrigger,
+    setDogImagesByBreedTrigger,
+    setCatImagesByBreedPageNumber,
+    setDogImagesByBreedPageNumber,
   };
 
   return (
