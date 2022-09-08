@@ -1,14 +1,24 @@
 import React, { useContext, useEffect, useState } from "react";
+import {
+  createTheme,
+  ThemeProvider as MaterialUIThemeProvider,
+} from "@mui/material/styles";
 
 const ThemeContext = React.createContext();
 
 export const useTheme = () => useContext(ThemeContext);
 
 export const ThemeProvider = ({ children }) => {
-  const [colorTheme, setColorTheme] = useState(null);
+  const [colorTheme, setColorTheme] = useState("light");
+
+  const muiTheme = createTheme({
+    palette: {
+      mode: colorTheme,
+    },
+  });
 
   useEffect(() => {
-    setColorTheme("light");
+    setColorTheme("dark");
   }, []);
 
   useEffect(() => {
@@ -20,6 +30,10 @@ export const ThemeProvider = ({ children }) => {
   };
 
   return (
-    <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
+    <ThemeContext.Provider value={value}>
+      <MaterialUIThemeProvider theme={muiTheme}>
+        {children}
+      </MaterialUIThemeProvider>
+    </ThemeContext.Provider>
   );
 };
