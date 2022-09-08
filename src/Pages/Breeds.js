@@ -5,6 +5,7 @@ const Breeds = () => {
   const { catDogBreeds, catDogBreedsPageNumber, changeCatDogBreeds } = useCatDogContext()
 
   if (!catDogBreeds) return ""
+  
 
   return (
     <div style={{
