@@ -11,9 +11,8 @@ export const CatDogProvider = ({ children }) => {
   const [catDogBreedsPerPage, setCatDogBreedsPerPage] = useState(12);
   const [catDogBreedsPageNumber, setCatDogBreedsPageNumber] = useState(0);
   const [catDogBreedsTrigger, setCatDogBreedsTrigger] = useState(false);
-  const [catsDogs, setCatsDogs] = useState();
-  const [catsDogsPerPage, setCatsDogsPerPage] = useState();
-  const [catsDogsPageNumber, setCatsDogsPageNumber] = useState();
+  const [catImages, setCatImages] = useState([]);
+  const [dogImages, setDogImages] = useState([]);
 
   const getCatDogBreeds = async () => {
     const res = await Promise.all([
@@ -43,51 +42,50 @@ export const CatDogProvider = ({ children }) => {
       }
     );
 
-    setCatDogBreeds(combinedRes.rows)
+    setCatDogBreeds(combinedRes.rows);
   };
 
-  const getManyCatDogByBreed = async (breeds_id) => {
+  const getCatImagesByBreed = async (breeds_id) => {
     try {
-      const res = await Promise.all([
-        axios.get(
-          `https://api.thecatapi.com/v1/images/search?breed_ids=${breeds_id}&limit=10&page=0`
-        ),
-        axios.get(
-          `https://api.thedogapi.com/v1/images/search?breed_ids=${breeds_id}&limit=10&page=0`
-        ),
-      ]);
-
-      setCatsDogs(
-        res.reduce((result, item) => {
-          return result.concat(item.data);
-        }, [])
+      if (!breeds_id) return ""
+      const res = await axios.get(
+        `https://api.thecatapi.com/v1/images/search?breed_ids=${breeds_id}&limit=10&page=0`
       );
+
+      setCatImages(res.data);
     } catch (error) {}
   };
 
-  const getOneCatDogImage = async () => {
-    // console.log(
-    //   await axios.get(
-    //     `https://api.thedogapi.com/v1/images/pk1AAdloG`
-    //   )
-    // );
+  const getDogImagesByBreed = async (breeds_id) => {
+    try {
+      if (!breeds_id) return ""
+      const res = await axios.get(
+        `https://api.thedogapi.com/v1/images/search?breed_ids=${breeds_id}&limit=10&page=0`
+      );
+
+      setDogImages(res.data);
+    } catch (error) {}
   };
 
   const changeCatDogBreeds = (newPageNumber) => {
-    setCatDogBreedsPageNumber(newPageNumber)
-    setCatDogBreedsTrigger((prevState) => !prevState)
-  }
+    setCatDogBreedsPageNumber(newPageNumber);
+    setCatDogBreedsTrigger((prevState) => !prevState);
+  };
 
   useEffect(() => {
     getCatDogBreeds();
+    getCatImagesByBreed();
+    getDogImagesByBreed();
   }, [catDogBreedsTrigger]);
 
   const value = {
     catDogBreeds,
-    catsDogs,
-    getManyCatDogByBreed,
     catDogBreedsPageNumber,
-    changeCatDogBreeds
+    changeCatDogBreeds,
+    dogImages,
+    catImages,
+    getCatImagesByBreed,
+    getDogImagesByBreed,
   };
 
   return (
