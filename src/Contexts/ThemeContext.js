@@ -18,7 +18,7 @@ export const ThemeProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    setColorTheme("dark");
+    setColorTheme("light");
   }, []);
 
   useEffect(() => {
