@@ -1,5 +1,5 @@
 import React from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useCatDogContext } from "../Contexts/CatDogContext";
 
 const Breeds = () => {
@@ -26,15 +26,17 @@ const Breeds = () => {
           display: "flex",
         }}
       >
-        <p
+        <Link
+          to={"/"}
           style={{
+            cursor: "pointer",
             color: "var(--base-color-pink)",
             fontSize: "40px",
             fontWeight: "700",
           }}
         >
           Breeds
-        </p>
+        </Link>
       </div>
       <div
         style={{
@@ -131,25 +133,6 @@ const Breeds = () => {
                 >
                   {breed.description ? breed.description : breed.temperament}
                 </p>
-              </div>
-              <div
-                style={{
-                  display: "flex",
-                  marginTop: "10px",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    backgroundColor: "var(--bg-color-1)",
-                    padding: "10px 25px",
-                    borderRadius: "4px",
-                    fontWeight: "900",
-                    cursor: "pointer",
-                  }}
-                >
-                  READ MORE
-                </div>
               </div>
             </div>
           </div>

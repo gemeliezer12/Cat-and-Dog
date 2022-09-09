@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useCatDogContext } from "../Contexts/CatDogContext";
 import Masonry from "@mui/lab/Masonry";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
@@ -11,10 +11,11 @@ const Cats = () => {
     setCatImagesByBreedPageNumber,
     setCatImagesByBreedTrigger,
     setSelectedCatBreed,
+    catImagesByBreedMaxPage,
+    catImagesByBreedPageNumber,
+    selectedCatBreed,
   } = useCatDogContext();
-  const { breeds_id } = useParams();
   const [breedOptions, setBreedOptions] = useState();
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const breedOptionsHandler = async () => {
@@ -32,8 +33,6 @@ const Cats = () => {
   useEffect(() => {
     setSelectedCatBreed(searchParams.get("breeds_id"));
   }, [searchParams.get("breeds_id")]);
-
-  console.log();
 
   if (!catImagesByBreed) return "";
   if (!breedOptions) return "";
@@ -57,14 +56,17 @@ const Cats = () => {
             display: "flex",
           }}
         >
-          <p
+          <Link
+            to={"/cats"}
             style={{
+              cursor: "pointer",
               color: "var(--base-color-pink)",
               fontSize: "40px",
+              fontWeight: "700",
             }}
           >
             Cats
-          </p>
+          </Link>
         </div>
         <div
           style={{
@@ -77,9 +79,9 @@ const Cats = () => {
             <InputLabel id="demo-simple-select-label">Breed</InputLabel>
             <Select
               value={
-                breeds_id &&
+                selectedCatBreed &&
                 breedOptions.filter(
-                  (breedOption) => breedOption.id === breeds_id
+                  (breedOption) => breedOption.id == selectedCatBreed
                 )[0].id
               }
               label="Breed"
@@ -129,30 +131,34 @@ const Cats = () => {
           ))}
         </Masonry>
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "10px",
-        }}
-      >
+      {catImagesByBreedPageNumber + 1 > catImagesByBreedMaxPage ? (
+        ""
+      ) : (
         <div
-          className="dark"
           style={{
-            padding: "10px 25px",
-            backgroundColor: "var(--base-color-pink)",
-            borderRadius: "4px",
-            fontWeight: "900",
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            setCatImagesByBreedPageNumber((prevState) => prevState + 1);
-            setCatImagesByBreedTrigger((prevState) => !prevState);
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "10px",
           }}
         >
-          <p>Load more</p>
+          <div
+            className="dark"
+            style={{
+              padding: "10px 25px",
+              backgroundColor: "var(--base-color-pink)",
+              borderRadius: "4px",
+              fontWeight: "900",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              setCatImagesByBreedPageNumber((prevState) => prevState + 1);
+              setCatImagesByBreedTrigger((prevState) => !prevState);
+            }}
+          >
+            <p>Load more</p>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useCatDogContext } from "../Contexts/CatDogContext";
 import Masonry from "@mui/lab/Masonry";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
@@ -11,10 +11,12 @@ const Dogs = () => {
     setDogImagesByBreedPageNumber,
     setDogImagesByBreedTrigger,
     setSelectedDogBreed,
+    dogImagesByBreedMaxPage,
+    dogImagesByBreedPageNumber,
+    selectedDogBreed,
   } = useCatDogContext();
-  const { breeds_id } = useParams();
   const [breedOptions, setBreedOptions] = useState();
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const breedOptionsHandler = async () => {
     try {
@@ -29,8 +31,10 @@ const Dogs = () => {
   }, []);
 
   useEffect(() => {
-    setSelectedDogBreed(breeds_id);
-  }, [breeds_id]);
+    setSelectedDogBreed(searchParams.get("breeds_id"));
+  }, [searchParams.get("breeds_id")]);
+
+  console.log(dogImagesByBreed);
 
   if (!dogImagesByBreed) return "";
   if (!breedOptions) return "";
@@ -54,14 +58,17 @@ const Dogs = () => {
             display: "flex",
           }}
         >
-          <p
+          <Link
+            to={"/dogs"}
             style={{
+              cursor: "pointer",
               color: "var(--base-color-pink)",
               fontSize: "40px",
+              fontWeight: "700",
             }}
           >
             Dogs
-          </p>
+          </Link>
         </div>
         <div
           style={{
@@ -74,16 +81,18 @@ const Dogs = () => {
             <InputLabel id="demo-simple-select-label">Breed</InputLabel>
             <Select
               value={
-                breeds_id &&
+                selectedDogBreed &&
                 breedOptions.filter(
-                  (breedOption) => breedOption.id == breeds_id
+                  (breedOption) => breedOption.id == selectedDogBreed
                 )[0].id
               }
               label="Breed"
               onChange={(e) => {
                 const { value } = e.target;
 
-                navigate(`../dogs/${value}`, { replace: true });
+                searchParams.set("breeds_id", value);
+
+                setSearchParams(searchParams);
               }}
             >
               {breedOptions.map((breedOption) => (
@@ -112,36 +121,46 @@ const Dogs = () => {
                   borderRadius: "20px",
                   display: "block",
                   width: "100%",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  searchParams.set("image_id", dog.id);
+
+                  setSearchParams(searchParams);
                 }}
               />
             </div>
           ))}
         </Masonry>
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          marginTop: "10px",
-        }}
-      >
+      {dogImagesByBreedPageNumber + 1 > dogImagesByBreedMaxPage ? (
+        ""
+      ) : (
         <div
-          className="dark"
           style={{
-            padding: "10px 25px",
-            backgroundColor: "var(--base-color-pink)",
-            borderRadius: "4px",
-            fontWeight: "900",
-            cursor: "pointer",
-          }}
-          onClick={() => {
-            setDogImagesByBreedPageNumber((prevState) => prevState + 1);
-            setDogImagesByBreedTrigger((prevState) => !prevState);
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "10px",
           }}
         >
-          <p>Load more</p>
+          <div
+            className="dark"
+            style={{
+              padding: "10px 25px",
+              backgroundColor: "var(--base-color-pink)",
+              borderRadius: "4px",
+              fontWeight: "900",
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              setDogImagesByBreedPageNumber((prevState) => prevState + 1);
+              setDogImagesByBreedTrigger((prevState) => !prevState);
+            }}
+          >
+            <p>Load more</p>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

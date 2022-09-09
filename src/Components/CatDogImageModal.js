@@ -22,7 +22,7 @@ const CatDogImageModal = () => {
         paddingLeft: "60px",
         backgroundColor: "rgba(0, 0, 0, 0.4)",
         backdropFilter: "blur(2px)",
-        zIndex: "1",
+        zIndex: "3",
       }}
     >
       <div

@@ -21,8 +21,11 @@ export const CatDogProvider = ({ children }) => {
   const [dogImagesByBreedTrigger, setDogImagesByBreedTrigger] = useState(false);
   const [selectedCatBreed, setSelectedCatBreed] = useState();
   const [selectedDogBreed, setSelectedDogBreed] = useState();
+  const [catImagesByBreedMaxPage, setCatImagesByBreedMaxPage] = useState();
+  const [datImagesByBreedMaxPage, setDogImagesByBreedMaxPage] = useState();
   const [catDogImageToView, setCatDogImageToView] = useState();
   const [searchParams, setSearchParams] = useSearchParams();
+  const catDogImageToViewID = searchParams.get("image_id")
 
   const getCatDogBreeds = async () => {
     const res = await Promise.all([
@@ -74,9 +77,12 @@ export const CatDogProvider = ({ children }) => {
         );
       }
 
+      setCatImagesByBreedMaxPage(res.headers["pagination-count"] / 10);
       setCatImagesByBreed([...catImagesByBreed, ...res.data]);
     } catch (error) {}
   };
+
+  console.log(catImagesByBreedMaxPage);
 
   const getDogImagesByBreed = async () => {
     try {
@@ -103,20 +109,20 @@ export const CatDogProvider = ({ children }) => {
   const getCatDogImages = async (catDogImageToViewID) => {
     let res;
 
-    if (!catDogImageToViewID) setCatDogImageToView();
-
     try {
       res = await axios.get(
         `https://api.thecatapi.com/v1/images/${catDogImageToViewID}`
       );
+      setCatDogImageToView(res.data);
     } catch (error) {}
     try {
       res = await axios.get(
         `https://api.thedogapi.com/v1/images/${catDogImageToViewID}`
       );
+      setCatDogImageToView(res.data);
     } catch (error) {}
 
-    setCatDogImageToView(res.data);
+    if (!catDogImageToViewID) setCatDogImageToView();
   };
 
   const changeCatDogBreeds = (newPageNumber) => {
@@ -150,8 +156,8 @@ export const CatDogProvider = ({ children }) => {
   }, [selectedDogBreed]);
 
   useEffect(() => {
-    getCatDogImages(searchParams.get("image_id"));
-  }, [searchParams.get("image_id")]);
+    getCatDogImages(catDogImageToViewID)
+  }, [catDogImageToViewID]);
 
   const value = {
     catDogBreeds,
@@ -169,7 +175,13 @@ export const CatDogProvider = ({ children }) => {
     setCatImagesByBreedTrigger,
     setDogImagesByBreedTrigger,
     setCatImagesByBreedPageNumber,
+    dogImagesByBreedPageNumber,
+    catImagesByBreedPageNumber,
     setDogImagesByBreedPageNumber,
+    catImagesByBreedMaxPage,
+    setCatImagesByBreedMaxPage,
+    datImagesByBreedMaxPage,
+    setDogImagesByBreedMaxPage,
     catDogImageToView,
     setCatDogImageToView,
   };
