@@ -25,7 +25,7 @@ export const CatDogProvider = ({ children }) => {
   const [datImagesByBreedMaxPage, setDogImagesByBreedMaxPage] = useState();
   const [catDogImageToView, setCatDogImageToView] = useState();
   const [searchParams, setSearchParams] = useSearchParams();
-  const catDogImageToViewID = searchParams.get("image_id")
+  const catDogImageToViewID = searchParams.get("image_id");
 
   const getCatDogBreeds = async () => {
     const res = await Promise.all([
@@ -39,7 +39,6 @@ export const CatDogProvider = ({ children }) => {
 
     const combinedRes = res.reduce(
       (result, item) => {
-        console.log();
         return {
           rows: result.rows.concat(item.data),
           count: parseInt(
@@ -81,8 +80,6 @@ export const CatDogProvider = ({ children }) => {
       setCatImagesByBreed([...catImagesByBreed, ...res.data]);
     } catch (error) {}
   };
-
-  console.log(catImagesByBreedMaxPage);
 
   const getDogImagesByBreed = async () => {
     try {
@@ -156,7 +153,7 @@ export const CatDogProvider = ({ children }) => {
   }, [selectedDogBreed]);
 
   useEffect(() => {
-    getCatDogImages(catDogImageToViewID)
+    getCatDogImages(catDogImageToViewID);
   }, [catDogImageToViewID]);
 
   const value = {

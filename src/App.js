@@ -7,29 +7,20 @@ import "./Styles/globals.css";
 import Cats from "./Pages/Cats";
 import CatDogImageModal from "./Components/CatDogImageModal";
 import Navbar from "./Components/Navbar";
+import ScrollToTop from "./Components/ScrollToTop";
 
 function App() {
   return (
     <ThemeProvider>
       <CatDogProvider>
-        <div
-          style={{
-            overflowY: "auto",
-            overflowX: "hidden",
-            height: "100vh",
-            width: "100vw",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Breeds />} />
-            <Route path="/dogs" element={<Dogs />} />
-            <Route path="/cats" element={<Cats />} />
-          </Routes>
-          <CatDogImageModal />
-        </div>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Breeds />} />
+          <Route path="/dogs" element={<Dogs />} />
+          <Route path="/cats" element={<Cats />} />
+        </Routes>
+        <CatDogImageModal />
+        <ScrollToTop />
       </CatDogProvider>
     </ThemeProvider>
   );

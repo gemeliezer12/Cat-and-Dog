@@ -105,11 +105,12 @@ textarea {
 }
 body {
   background-color: var(--bg-color-2);
+  overflow-y: auto;
+  overflow-x: hidden;
   height: 100vh;
   width: 100vw;
-  overflow: hidden;
-  top: 0;
-  left: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 ::-webkit-scrollbar {

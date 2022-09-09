@@ -34,8 +34,6 @@ const Dogs = () => {
     setSelectedDogBreed(searchParams.get("breeds_id"));
   }, [searchParams.get("breeds_id")]);
 
-  console.log(dogImagesByBreed);
-
   if (!dogImagesByBreed) return "";
   if (!breedOptions) return "";
 
