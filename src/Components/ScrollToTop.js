@@ -24,6 +24,7 @@ const ScrollToTop = () => {
 
   return (
     <div
+      onClick={goToTop}
       style={{
         width: "60px",
         height: "60px",
@@ -42,7 +43,6 @@ const ScrollToTop = () => {
     >
       <i
         className="fa-solid fa-arrow-up"
-        onClick={goToTop}
         style={{
           color: "white",
           fontSize: "32px",
