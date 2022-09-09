@@ -3,8 +3,12 @@ import { useSearchParams } from "react-router-dom";
 import { useCatDogContext } from "../Contexts/CatDogContext";
 
 const Breeds = () => {
-  const { catDogBreeds, catDogBreedsPageNumber, changeCatDogBreeds } =
-    useCatDogContext();
+  const {
+    catDogBreeds,
+    catDogBreedsPageNumber,
+    changeCatDogBreeds,
+    catDogBreedsMaxPage,
+  } = useCatDogContext();
   const [searchParams, setSearchParams] = useSearchParams();
 
   if (!catDogBreeds) return "";
@@ -26,6 +30,7 @@ const Breeds = () => {
           style={{
             color: "var(--base-color-pink)",
             fontSize: "40px",
+            fontWeight: "700",
           }}
         >
           Breeds
@@ -164,7 +169,10 @@ const Breeds = () => {
           }}
         >
           <div
-            onClick={() => changeCatDogBreeds(catDogBreedsPageNumber - 1)}
+            onClick={() => {
+              if (catDogBreedsPageNumber - 1 < 0) return;
+              changeCatDogBreeds(catDogBreedsPageNumber - 1);
+            }}
             className="dark"
             style={{
               padding: "10px 25px",
@@ -172,19 +180,30 @@ const Breeds = () => {
               borderRadius: "4px",
               fontWeight: "900",
               cursor: "pointer",
+              opacity: catDogBreedsPageNumber - 1 < 0 ? ".4" : "1",
+              cursor:
+                catDogBreedsPageNumber - 1 < 0 ? "not-allowed" : "pointer",
             }}
           >
             <p>Previous</p>
           </div>
           <div
-            onClick={() => changeCatDogBreeds(catDogBreedsPageNumber + 1)}
+            onClick={() => {
+              if (catDogBreedsPageNumber + 1 > catDogBreedsMaxPage) return;
+              changeCatDogBreeds(catDogBreedsPageNumber + 1);
+            }}
             className="dark"
             style={{
               padding: "10px 25px",
               backgroundColor: "var(--base-color-pink)",
               borderRadius: "4px",
               fontWeight: "900",
-              cursor: "pointer",
+              opacity:
+                catDogBreedsPageNumber + 1 > catDogBreedsMaxPage ? ".4" : "1",
+              cursor:
+                catDogBreedsPageNumber + 1 > catDogBreedsMaxPage
+                  ? "not-allowed"
+                  : "pointer",
             }}
           >
             <p>Next</p>

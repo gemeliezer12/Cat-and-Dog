@@ -2,9 +2,8 @@ import { CatDogProvider } from "./Contexts/CatDogContext";
 import { ThemeProvider } from "./Contexts/ThemeContext";
 import Breeds from "./Pages/Breeds";
 import Dogs from "./Pages/Dogs";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 import "./Styles/globals.css";
-import Checkbox from "@mui/material/Checkbox";
 import Cats from "./Pages/Cats";
 import CatDogImageModal from "./Components/CatDogImageModal";
 
@@ -22,6 +21,36 @@ function App() {
             flexDirection: "column",
           }}
         >
+          <div className="dark" style={{
+            height: "70px",
+            minHeight: "70px",
+            width: "100%",
+            backgroundColor: "var(--base-color-indigo)",
+            display: "flex",
+            position: "sticky",
+            top: "0",
+            zIndex: "1",
+            paddingLeft: "32px",
+            paddingRight: "20px",
+          }}>
+            <div style={{
+              display: "flex",
+              gap: "16px",
+              alignItems: "center",
+              fontSize: "26px",
+              fontWeight: "700"
+            }}>
+              <Link to={"/"} style={{
+                cursor: "pointer",
+              }}>Home</Link>
+              <Link to={"/cats"} style={{
+                cursor: "pointer",
+              }}>Cats</Link>
+              <Link to={"/dogs"} style={{
+                cursor: "pointer",
+              }}>Dogs</Link>
+            </div>
+          </div>
           <Routes>
             <Route path="/" element={<Breeds />} />
             <Route path="/dogs" element={<Dogs />} />
@@ -29,7 +58,6 @@ function App() {
           </Routes>
           <CatDogImageModal />
         </div>
-        <Checkbox defaultChecked />
       </CatDogProvider>
     </ThemeProvider>
   );

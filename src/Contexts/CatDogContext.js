@@ -10,6 +10,7 @@ export const CatDogProvider = ({ children }) => {
   const [catDogBreeds, setCatDogBreeds] = useState();
   const [catDogBreedsPageNumber, setCatDogBreedsPageNumber] = useState(0);
   const [catDogBreedsTrigger, setCatDogBreedsTrigger] = useState(false);
+  const [catDogBreedsMaxPage, setCatDogBreedsMaxPage] = useState(0);
   const [catImagesByBreed, setCatImagesByBreed] = useState([]);
   const [dogImagesByBreed, setDogImagesByBreed] = useState([]);
   const [catImagesByBreedPageNumber, setCatImagesByBreedPageNumber] =
@@ -21,10 +22,7 @@ export const CatDogProvider = ({ children }) => {
   const [selectedCatBreed, setSelectedCatBreed] = useState();
   const [selectedDogBreed, setSelectedDogBreed] = useState();
   const [catDogImageToView, setCatDogImageToView] = useState();
-
   const [searchParams, setSearchParams] = useSearchParams();
-
-  console.log(searchParams.get("image_id"));
 
   const getCatDogBreeds = async () => {
     const res = await Promise.all([
@@ -38,10 +36,14 @@ export const CatDogProvider = ({ children }) => {
 
     const combinedRes = res.reduce(
       (result, item) => {
+        console.log();
         return {
           rows: result.rows.concat(item.data),
-          count:
-            parseInt(item.headers["pagination-count"]) + parseInt(result.count),
+          count: parseInt(
+            item.headers["pagination-count"] > result.count
+              ? item.headers["pagination-count"]
+              : result.count
+          ),
         };
       },
       {
@@ -50,6 +52,7 @@ export const CatDogProvider = ({ children }) => {
       }
     );
 
+    setCatDogBreedsMaxPage(combinedRes.count / 6);
     setCatDogBreeds(combinedRes.rows);
   };
 
@@ -153,6 +156,7 @@ export const CatDogProvider = ({ children }) => {
   const value = {
     catDogBreeds,
     catDogBreedsPageNumber,
+    catDogBreedsMaxPage,
     changeCatDogBreeds,
     dogImagesByBreed,
     catImagesByBreed,
