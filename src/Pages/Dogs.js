@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { useCatDogContext } from "../Contexts/CatDogContext";
+import { usePetContext } from "../Contexts/PetContext";
 import Masonry from "@mui/lab/Masonry";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
+import Pet from "../Components/Pets/Pet";
 import axios from "axios";
 
 const Dogs = () => {
@@ -14,7 +15,7 @@ const Dogs = () => {
     dogImagesByBreedMaxPage,
     dogImagesByBreedPageNumber,
     selectedDogBreed,
-  } = useCatDogContext();
+  } = usePetContext();
   const [breedOptions, setBreedOptions] = useState();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -108,26 +109,8 @@ const Dogs = () => {
         }}
       >
         <Masonry columns={{ xs: 2, sm: 3, md: 4, lg: 5, xl: 6 }} spacing={1}>
-          {dogImagesByBreed.map((dog, index) => (
-            <div key={index}>
-              <img
-                src={`${dog.url}`}
-                srcSet={`${dog.url}`}
-                alt={""}
-                loading="lazy"
-                style={{
-                  borderRadius: "20px",
-                  display: "block",
-                  width: "100%",
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  searchParams.set("image_id", dog.id);
-
-                  setSearchParams(searchParams);
-                }}
-              />
-            </div>
+          {dogImagesByBreed.map((pet, index) => (
+            <Pet pet={pet} key={pet.id} />
           ))}
         </Masonry>
       </div>

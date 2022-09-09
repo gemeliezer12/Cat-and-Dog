@@ -1,15 +1,15 @@
 import { Modal } from "@mui/material";
 import { useSearchParams } from "react-router-dom";
-import { useCatDogContext } from "../Contexts/CatDogContext";
+import { usePetContext } from "../Contexts/PetContext";
 
-const CatDogImageModal = () => {
-  const { catDogImageToView } = useCatDogContext();
+const PetImageModal = () => {
+  const { petImageToView } = usePetContext();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  if (!catDogImageToView) return "";
+  if (!petImageToView) return "";
 
   return (
-    <Modal open={catDogImageToView}>
+    <Modal open={petImageToView}>
       <div
         style={{
           position: "fixed",
@@ -54,7 +54,7 @@ const CatDogImageModal = () => {
           ></i>
         </div>
         <img
-          src={catDogImageToView.url}
+          src={petImageToView.url}
           alt=""
           style={{
             maxWidth: "100%",
@@ -66,4 +66,4 @@ const CatDogImageModal = () => {
   );
 };
 
-export default CatDogImageModal;
+export default PetImageModal;

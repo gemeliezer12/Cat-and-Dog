@@ -2,15 +2,15 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-const CatDogContext = React.createContext();
+const PetContext = React.createContext();
 
-export const useCatDogContext = () => useContext(CatDogContext);
+export const usePetContext = () => useContext(PetContext);
 
-export const CatDogProvider = ({ children }) => {
-  const [catDogBreeds, setCatDogBreeds] = useState();
-  const [catDogBreedsPageNumber, setCatDogBreedsPageNumber] = useState(0);
-  const [catDogBreedsTrigger, setCatDogBreedsTrigger] = useState(false);
-  const [catDogBreedsMaxPage, setCatDogBreedsMaxPage] = useState(0);
+export const PetProvider = ({ children }) => {
+  const [petBreeds, setPetBreeds] = useState();
+  const [petBreedsPageNumber, setPetBreedsPageNumber] = useState(0);
+  const [petBreedsTrigger, setPetBreedsTrigger] = useState(false);
+  const [petBreedsMaxPage, setPetBreedsMaxPage] = useState(0);
   const [catImagesByBreed, setCatImagesByBreed] = useState([]);
   const [dogImagesByBreed, setDogImagesByBreed] = useState([]);
   const [catImagesByBreedPageNumber, setCatImagesByBreedPageNumber] =
@@ -23,17 +23,17 @@ export const CatDogProvider = ({ children }) => {
   const [selectedDogBreed, setSelectedDogBreed] = useState();
   const [catImagesByBreedMaxPage, setCatImagesByBreedMaxPage] = useState();
   const [datImagesByBreedMaxPage, setDogImagesByBreedMaxPage] = useState();
-  const [catDogImageToView, setCatDogImageToView] = useState();
+  const [petImageToView, setPetImageToView] = useState();
   const [searchParams, setSearchParams] = useSearchParams();
-  const catDogImageToViewID = searchParams.get("image_id");
+  const petImageToViewID = searchParams.get("image_id");
 
-  const getCatDogBreeds = async () => {
+  const getPetBreeds = async () => {
     const res = await Promise.all([
       axios.get(
-        `https://api.thecatapi.com/v1/breeds?page=${catDogBreedsPageNumber}&limit=6`
+        `https://api.thecatapi.com/v1/breeds?page=${petBreedsPageNumber}&limit=6`
       ),
       axios.get(
-        `https://api.thedogapi.com/v1/breeds?page=${catDogBreedsPageNumber}&limit=6`
+        `https://api.thedogapi.com/v1/breeds?page=${petBreedsPageNumber}&limit=6`
       ),
     ]);
 
@@ -54,8 +54,8 @@ export const CatDogProvider = ({ children }) => {
       }
     );
 
-    setCatDogBreedsMaxPage(combinedRes.count / 6);
-    setCatDogBreeds(combinedRes.rows);
+    setPetBreedsMaxPage(combinedRes.count / 6);
+    setPetBreeds(combinedRes.rows);
   };
 
   const getCatImagesByBreed = async () => {
@@ -103,34 +103,34 @@ export const CatDogProvider = ({ children }) => {
     } catch (error) {}
   };
 
-  const getCatDogImages = async (catDogImageToViewID) => {
+  const getPetImages = async (petImageToViewID) => {
     let res;
 
     try {
       res = await axios.get(
-        `https://api.thecatapi.com/v1/images/${catDogImageToViewID}`
+        `https://api.thecatapi.com/v1/images/${petImageToViewID}`
       );
-      setCatDogImageToView(res.data);
+      setPetImageToView(res.data);
     } catch (error) {}
     try {
       res = await axios.get(
-        `https://api.thedogapi.com/v1/images/${catDogImageToViewID}`
+        `https://api.thedogapi.com/v1/images/${petImageToViewID}`
       );
-      setCatDogImageToView(res.data);
+      setPetImageToView(res.data);
     } catch (error) {}
 
-    if (!catDogImageToViewID) setCatDogImageToView();
+    if (!petImageToViewID) setPetImageToView();
   };
 
-  const changeCatDogBreeds = (newPageNumber) => {
-    setCatDogBreedsPageNumber(newPageNumber);
-    setCatDogBreedsTrigger((prevState) => !prevState);
+  const changePetBreeds = (newPageNumber) => {
+    setPetBreedsPageNumber(newPageNumber);
+    setPetBreedsTrigger((prevState) => !prevState);
   };
 
   useEffect(() => {
-    getCatDogImages();
-    getCatDogBreeds();
-  }, [catDogBreedsTrigger]);
+    getPetImages();
+    getPetBreeds();
+  }, [petBreedsTrigger]);
 
   useEffect(() => {
     getCatImagesByBreed();
@@ -153,14 +153,14 @@ export const CatDogProvider = ({ children }) => {
   }, [selectedDogBreed]);
 
   useEffect(() => {
-    getCatDogImages(catDogImageToViewID);
-  }, [catDogImageToViewID]);
+    getPetImages(petImageToViewID);
+  }, [petImageToViewID]);
 
   const value = {
-    catDogBreeds,
-    catDogBreedsPageNumber,
-    catDogBreedsMaxPage,
-    changeCatDogBreeds,
+    petBreeds,
+    petBreedsPageNumber,
+    petBreedsMaxPage,
+    changePetBreeds,
     dogImagesByBreed,
     catImagesByBreed,
     getCatImagesByBreed,
@@ -179,11 +179,9 @@ export const CatDogProvider = ({ children }) => {
     setCatImagesByBreedMaxPage,
     datImagesByBreedMaxPage,
     setDogImagesByBreedMaxPage,
-    catDogImageToView,
-    setCatDogImageToView,
+    petImageToView,
+    setPetImageToView,
   };
 
-  return (
-    <CatDogContext.Provider value={value}>{children}</CatDogContext.Provider>
-  );
+  return <PetContext.Provider value={value}>{children}</PetContext.Provider>;
 };
