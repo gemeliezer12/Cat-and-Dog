@@ -27,6 +27,7 @@ export const PetProvider = ({ children }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const petImageToViewID = searchParams.get("image_id");
 
+  // Gets a list of Cat and Dogs and combine them
   const getPetBreeds = async () => {
     const res = await Promise.all([
       axios.get(
@@ -58,6 +59,7 @@ export const PetProvider = ({ children }) => {
     setPetBreeds(combinedRes.rows);
   };
 
+  // Gets an images of cat by breeds, if not breeds_id is included it will get a random images of cats
   const getCatImagesByBreed = async () => {
     try {
       let res;
@@ -81,6 +83,7 @@ export const PetProvider = ({ children }) => {
     } catch (error) {}
   };
 
+  // Gets an images of cat by breeds, if not breeds_id is included it will get a random images of cats
   const getDogImagesByBreed = async () => {
     try {
       let res;
@@ -103,32 +106,36 @@ export const PetProvider = ({ children }) => {
     } catch (error) {}
   };
 
+  // Get an image of a cat or dog by image_id
   const getPetImages = async (petImageToViewID) => {
     let res;
-
     try {
       res = await axios.get(
         `https://api.thecatapi.com/v1/images/${petImageToViewID}`
       );
-      setPetImageToView(res.data);
     } catch (error) {}
     try {
       res = await axios.get(
         `https://api.thedogapi.com/v1/images/${petImageToViewID}`
       );
-      setPetImageToView(res.data);
     } catch (error) {}
 
-    if (!petImageToViewID) setPetImageToView();
+    if (!petImageToViewID) {
+      setPetImageToView();
+      return;
+    }
+
+    setPetImageToView(res.data);
   };
 
-  const changePetBreeds = (newPageNumber) => {
+  // Changes the list of Pet Breeds Page
+  const changePetBreedsPage = (newPageNumber) => {
     setPetBreedsPageNumber(newPageNumber);
     setPetBreedsTrigger((prevState) => !prevState);
   };
 
+  // Triggers cause the code inside the useEffect to execute
   useEffect(() => {
-    getPetImages();
     getPetBreeds();
   }, [petBreedsTrigger]);
 
@@ -152,6 +159,7 @@ export const PetProvider = ({ children }) => {
     setDogImagesByBreedTrigger((prevState) => !prevState);
   }, [selectedDogBreed]);
 
+  // Runs the function that gets an image of a cat or dogs if the search parameter image_id changes
   useEffect(() => {
     getPetImages(petImageToViewID);
   }, [petImageToViewID]);
@@ -160,7 +168,7 @@ export const PetProvider = ({ children }) => {
     petBreeds,
     petBreedsPageNumber,
     petBreedsMaxPage,
-    changePetBreeds,
+    changePetBreedsPage,
     dogImagesByBreed,
     catImagesByBreed,
     getCatImagesByBreed,

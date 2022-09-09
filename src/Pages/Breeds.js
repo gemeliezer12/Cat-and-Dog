@@ -4,7 +4,7 @@ import { usePetContext } from "../Contexts/PetContext";
 import Breed from "../Components/Breeds/Breed";
 
 const Breeds = () => {
-  const { petBreeds, petBreedsPageNumber, changePetBreeds, petBreedsMaxPage } =
+  const { petBreeds, petBreedsPageNumber, changePetBreedsPage, petBreedsMaxPage } =
     usePetContext();
 
   if (!petBreeds) return "";
@@ -65,7 +65,7 @@ const Breeds = () => {
           <div
             onClick={() => {
               if (petBreedsPageNumber - 1 < 0) return;
-              changePetBreeds(petBreedsPageNumber - 1);
+              changePetBreedsPage(petBreedsPageNumber - 1);
             }}
             className="dark"
             style={{
@@ -83,7 +83,7 @@ const Breeds = () => {
           <div
             onClick={() => {
               if (petBreedsPageNumber + 1 > petBreedsMaxPage) return;
-              changePetBreeds(petBreedsPageNumber + 1);
+              changePetBreedsPage(petBreedsPageNumber + 1);
             }}
             className="dark"
             style={{
