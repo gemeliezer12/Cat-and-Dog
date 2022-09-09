@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
 const CatDogContext = React.createContext();
 
@@ -20,6 +20,11 @@ export const CatDogProvider = ({ children }) => {
   const [dogImagesByBreedTrigger, setDogImagesByBreedTrigger] = useState(false);
   const [selectedCatBreed, setSelectedCatBreed] = useState();
   const [selectedDogBreed, setSelectedDogBreed] = useState();
+  const [catDogImageToView, setCatDogImageToView] = useState();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  console.log(searchParams.get("image_id"));
 
   const getCatDogBreeds = async () => {
     const res = await Promise.all([
@@ -92,12 +97,32 @@ export const CatDogProvider = ({ children }) => {
     } catch (error) {}
   };
 
+  const getCatDogImages = async (catDogImageToViewID) => {
+    let res;
+
+    if (!catDogImageToViewID) setCatDogImageToView();
+
+    try {
+      res = await axios.get(
+        `https://api.thecatapi.com/v1/images/${catDogImageToViewID}`
+      );
+    } catch (error) {}
+    try {
+      res = await axios.get(
+        `https://api.thedogapi.com/v1/images/${catDogImageToViewID}`
+      );
+    } catch (error) {}
+
+    setCatDogImageToView(res.data);
+  };
+
   const changeCatDogBreeds = (newPageNumber) => {
     setCatDogBreedsPageNumber(newPageNumber);
     setCatDogBreedsTrigger((prevState) => !prevState);
   };
 
   useEffect(() => {
+    getCatDogImages();
     getCatDogBreeds();
   }, [catDogBreedsTrigger]);
 
@@ -121,6 +146,10 @@ export const CatDogProvider = ({ children }) => {
     setDogImagesByBreedTrigger((prevState) => !prevState);
   }, [selectedDogBreed]);
 
+  useEffect(() => {
+    getCatDogImages(searchParams.get("image_id"));
+  }, [searchParams.get("image_id")]);
+
   const value = {
     catDogBreeds,
     catDogBreedsPageNumber,
@@ -137,6 +166,8 @@ export const CatDogProvider = ({ children }) => {
     setDogImagesByBreedTrigger,
     setCatImagesByBreedPageNumber,
     setDogImagesByBreedPageNumber,
+    catDogImageToView,
+    setCatDogImageToView,
   };
 
   return (

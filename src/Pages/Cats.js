@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useCatDogContext } from "../Contexts/CatDogContext";
 import Masonry from "@mui/lab/Masonry";
 import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
@@ -15,6 +15,7 @@ const Cats = () => {
   const { breeds_id } = useParams();
   const [breedOptions, setBreedOptions] = useState();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
   const breedOptionsHandler = async () => {
     try {
@@ -29,8 +30,10 @@ const Cats = () => {
   }, []);
 
   useEffect(() => {
-    setSelectedCatBreed(breeds_id);
-  }, [breeds_id]);
+    setSelectedCatBreed(searchParams.get("breeds_id"));
+  }, [searchParams.get("breeds_id")]);
+
+  console.log();
 
   if (!catImagesByBreed) return "";
   if (!breedOptions) return "";
@@ -83,7 +86,9 @@ const Cats = () => {
               onChange={(e) => {
                 const { value } = e.target;
 
-                navigate(`../cats/${value}`, { replace: true });
+                searchParams.set("breeds_id", value);
+
+                setSearchParams(searchParams);
               }}
             >
               {breedOptions.map((breedOption) => (
@@ -112,6 +117,12 @@ const Cats = () => {
                   borderRadius: "20px",
                   display: "block",
                   width: "100%",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  searchParams.set("image_id", cat.id);
+
+                  setSearchParams(searchParams);
                 }}
               />
             </div>
