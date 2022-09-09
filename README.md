@@ -1,3 +1,9 @@
+# How to clone this repository
+
+Run this command on a terminal:
+
+### `git clone <repo> <directory>`
+
 # How to run this application
 
 Have Node installed in your Desktop
