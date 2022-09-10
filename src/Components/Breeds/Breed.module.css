@@ -6,13 +6,13 @@
   overflow: hidden;
 }
 
-.imgContainer {
+.imageContainer {
   width: 100%;
   padding-top: 75%;
   position: relative;
 }
 
-.img {
+.image {
   width: 100%;
   height: 100%;
   object-fit: cover;
